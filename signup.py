@@ -1,8 +1,17 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from werkzeug.security import generate_password_hash, check_password_hash
+import sqlite3
 
 app = Flask(__name__)
 app.secret_key = "secret_key"
+
+def get_posts():
+    conn = sqlite3.connect("posts.db")
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM posts ORDER BY datetime DESC")
+    posts = cur.fetchall()
+    conn.close()
+    return posts
 
 @app.route("/signup", methods=["GET","POST"])
 def signup():
@@ -24,7 +33,9 @@ def before_request():
  
 @app.route("/")
 def index():
-    return render_template("index.html", username=session.get("username"))
+    posts = get_posts()
+    return render_template("index.html", posts=posts, username=session.get("username"))
+
  
 @app.route("/login", methods=["GET", "POST"])
 def login():
