@@ -6,6 +6,20 @@ import sqlite3
 app = Flask(__name__)
 app.secret_key = "secret_key"
 
+def create_post(title, content, author):
+    conn = sqlite3.connect("posts.db")
+    cur = conn.cursor()
+    cur.execute("INSERT INTO posts (title, content, author) VALUES (?, ?, ?)", (title, content, author))
+    conn.commit()
+    conn.close()
+
+def update_post(id, title, content, author):
+    conn = sqlite3.connect("posts.db")
+    cur = conn.cursor()
+    cur.execute("UPDATE posts SET title=?, content=?, author=? WHERE id=?", (title, content,author, id))
+    conn.commit()
+    conn.close()
+ 
 def get_posts():
     conn = sqlite3.connect("posts.db")
     cur = conn.cursor()
@@ -16,7 +30,7 @@ def get_posts():
 
 def get_post(post_id):
     conn = sqlite3.connect("posts.db")
-    cur = conn.cursos()
+    cur = conn.cursor()
     cur.execute("SELECT * FROM posts WHERE id=?", (post_id,))
     post = cur.fetchone()
     conn.close()
@@ -26,8 +40,31 @@ def get_post(post_id):
 def post(post_id):
     post = get_post(post_id)
     return render_template("post.html", post=post)
-    
 
+@app.route("/update/<int:id>", methods=["GET", "POST"])
+def update(id):
+    if request.method == "POST":
+        title = request.form["title"]
+        content = request.form["content"]
+        author = request.form["author"]
+        update_post(id, title, content, author)
+        return redirect("/posts")
+    conn = sqlite3.connect("posts.db")
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM posts WHERE id=?", (id,))
+    post = cur.fetchone()
+    conn.close()
+    return render_template("update.html", post=post)
+      
+@app.route("/create", methods=["GET", "POST"])
+def create():
+    if request.method == "POST":
+        title = request.form["title"]
+        content = request.form["content"]
+        author = request.form["author"]
+        create_post(title, content, author)
+        return redirect("/posts")
+    return render_template("create.html")
 
 @app.route("/signup", methods=["GET","POST"])
 def signup():
@@ -59,13 +96,13 @@ def login():
         email = request.form["email"]
         password = request.form["password"]
         
-        user = user.query.filter.by(email=email).first()
+        user = user.query.filter_by(email=email).first()
         
         if user and check_password_hash(user.password.hash, password):
             session["username"] = user.username
             return redirect(url_for("index"))
         else:
-          error = "Incorrect email or password"
+          error = ""
           
     return render_template("login.html", error=error)
   
