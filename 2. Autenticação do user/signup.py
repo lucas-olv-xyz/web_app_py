@@ -17,6 +17,15 @@ def signup():
         return redirect(url_for("index"))
     return render_template("signup.html")
  
+@app.before_request
+def before_request():
+    if "username" not in session and request.endpoint != "login":
+        return redirect(url_for("login"))
+ 
+@app.route("/")
+def index():
+    return render_template("index.html", username=session.get("username"))
+ 
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
