@@ -16,6 +16,24 @@ def signup():
         
         return redirect(url_for("index"))
     return render_template("signup.html")
+ 
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        email = request.form["email"]
+        password = request.form["password"]
+        
+        user = User.query.filter.by(email=email).first()
+        
+        if user and check_password_hash(user.password.hash, password):
+            session["username"] = user.username
+            return redirect(url_for("index"))
+        else:
+          error = "Incorrect email or password"
+          
+    return render_template("login.html", error=error)
+  
   
 if __name__ == "__main__":
     app.run(debug=True)
+   
