@@ -6,6 +6,29 @@ import sqlite3
 app = Flask(__name__)
 app.secret_key = "secret_key"
 
+def get_posts():
+    conn = sqlite3.connect("posts.db")
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM posts ORDER BY datetime DESC")
+    posts = cur.fetchall()
+    conn.close()
+    return posts
+
+def get_post(post_id):
+    conn = sqlite3.connect("posts.db")
+    cur = conn.cursos()
+    cur.execute("SELECT * FROM posts WHERE id=?", (post_id,))
+    post = cur.fetchone()
+    conn.close()
+    return post
+  
+@app.route("/post/<int:post_id>")
+def post(post_id):
+    post = get_post(post_id)
+    return render_template("post.html", post=post)
+    
+
+
 @app.route("/signup", methods=["GET","POST"])
 def signup():
     if request.method == "POST":
