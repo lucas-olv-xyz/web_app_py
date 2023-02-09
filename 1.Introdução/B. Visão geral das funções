@@ -1,0 +1,15 @@
+The web app will have the following features:
+
+    User authentication: Users will be able to sign up, log in, log out and have their session managed.
+
+    Posts management: Users will be able to create, view, update and delete their posts. They will also be able to view a list of all posts created on the platform.
+
+    Database: The app will store user information and post information, including the relationships between these tables if any.
+
+    User interface: The app will have a well-designed user interface with a navigation bar, post list, post creation form, post view and error handling messages.
+
+    Deployment: The app will be deployed on a hosting platform and will have a domain name and SSL certificate for security.
+
+    Comments: Users will be able to add comments to posts, allowing for discussions and engagement between users.
+
+These features will provide a comprehensive platform for users to share their thoughts and ideas and engage with others in a community setting.
