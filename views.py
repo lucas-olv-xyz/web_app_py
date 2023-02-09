@@ -2,16 +2,9 @@ from flask import Flask, render_template, request, redirect, url_for, session
 from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
 
+
 app = Flask(__name__)
 app.secret_key = "secret_key"
-
-def get_posts():
-    conn = sqlite3.connect("posts.db")
-    cur = conn.cursor()
-    cur.execute("SELECT * FROM posts ORDER BY datetime DESC")
-    posts = cur.fetchall()
-    conn.close()
-    return posts
 
 @app.route("/signup", methods=["GET","POST"])
 def signup():
@@ -60,4 +53,3 @@ def logout():
   
 if __name__ == "__main__":
     app.run(debug=True)
-   
