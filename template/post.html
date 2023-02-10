@@ -1,3 +1,6 @@
 <h1>{{ post.title }}</h1>
 <p>{{ post.content }}</p>
 <p>By {{ post.author }} on {{ post.datetime }}</p>
+<form action="{{ url_for('delete_post', post_id=post.id) }}" method="POST">
+  <input type="submit" value="Delete Post" />
+</form>
