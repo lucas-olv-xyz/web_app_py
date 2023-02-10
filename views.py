@@ -13,13 +13,6 @@ def create_post(title, content, author):
     conn.commit()
     conn.close()
 
-@app.route('/post/<int:post_id>/delete', methods=['POST'])
-def delete_post(post_id):
-    post = Post.query.get(post_id)
-    db.session.delete(post)
-    db.session.commit()
-    return redirect(url_for('index'))
-
 def update_post(id, title, content, author):
     conn = sqlite3.connect("posts.db")
     cur = conn.cursor()
@@ -72,6 +65,15 @@ def create():
         create_post(title, content, author)
         return redirect("/posts")
     return render_template("create.html")
+
+@app.route("/delete/<int:post_id>")
+def delete(post_id):
+    conn = sqlite3.connect("posts.db")
+    cur = conn.cursor()
+    cur.execute("DELETE FROM posts WHERE id=?", (post_id,))
+    conn.commit()
+    conn.close()
+    return redirect("/posts")
 
 @app.route("/signup", methods=["GET","POST"])
 def signup():
