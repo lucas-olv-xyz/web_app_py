@@ -36,10 +36,10 @@ def get_post(post_id):
     conn.close()
     return post
   
-@app.route("/post/<int:post_id>")
-def post(post_id):
-    post = get_post(post_id)
-    return render_template("post.html", post=post)
+@app.route("/posts")
+def post():
+    posts = get_posts()
+    return render_template("posts.html", posts=posts)
 
 @app.route("/update/<int:id>", methods=["GET", "POST"])
 def update(id):
